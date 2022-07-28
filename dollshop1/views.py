@@ -36,7 +36,7 @@ def product_detail(request, get_pk):
     if request.method == 'POST':
         comment_form = CommentaryForm(request.POST)
         if comment_form.is_valid():
-            cf = comment_form.save()
+            cf = comment_form.save(commit=False)
             cf.user = request.user
             cf.product = product
             cf.save()
