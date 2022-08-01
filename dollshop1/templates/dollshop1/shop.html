@@ -90,7 +90,7 @@
 										<div class="header_account-list mini_cart_wrapper">
 											<a href="javascript:void(0)"
 												><i class="icon-shopping-bag"></i
-												><span class="item_count">2</span></a
+												><span class="item_count">{{ cart_items }}</span></a
 											>
 											<!--mini cart-->
 											<div class="mini_cart">
@@ -105,54 +105,38 @@
 															></a>
 														</div>
 													</div>
-													<div class="cart_item">
-														<div class="cart_img">
-															<a href="#"
-																><img
-																	src="../../../static/img/s-product/product.jpg"
-																	alt=""
-															/></a>
+													{% if cart %}
+														{% for item in cart %}
+														<div class="cart_item">
+															<div class="cart_img">
+																<a href="#"
+																	><img
+																		src="{{ item.product.image.url }}"
+																		alt=""
+																/></a>
+															</div>
+															<div class="cart_info">
+																<a href="#">{{ item.product.name }}</a>
+																<p>{{ item.quantity }} x <span> {{ item.product.price }} </span></p>
+															</div>
+															<div class="cart_remove">
+																<a href="{% url 'dollshop:cart_delete' product_pk=item.pk %}"><i class="icon-x"></i></a>
+															</div>
 														</div>
-														<div class="cart_info">
-															<a href="#">Primis In Faucibus</a>
-															<p>1 x <span> $65.00 </span></p>
-														</div>
-														<div class="cart_remove">
-															<a href="#"><i class="icon-x"></i></a>
-														</div>
-													</div>
-													<div class="cart_item">
-														<div class="cart_img">
-															<a href="#"
-																><img
-																	src="../../../static/img/s-product/product2.jpg"
-																	alt=""
-															/></a>
-														</div>
-														<div class="cart_info">
-															<a href="#">Letraset Sheets</a>
-															<p>1 x <span> $60.00 </span></p>
-														</div>
-														<div class="cart_remove">
-															<a href="#"><i class="icon-x"></i></a>
-														</div>
-													</div>
+														{% endfor %}
+													{% endif %}
 												</div>
 												<div class="mini_cart_table">
 													<div class="cart_table_border">
-														<div class="cart_total">
-															<span>Sub total:</span>
-															<span class="price">$125.00</span>
-														</div>
 														<div class="cart_total mt-10">
-															<span>total:</span>
-															<span class="price">$125.00</span>
+															<span>Total:</span>
+															<span class="price">{{ total_price }}</span>
 														</div>
 													</div>
 												</div>
 												<div class="mini_cart_footer">
 													<div class="cart_button">
-														<a href="cart.html"
+														<a href="{% url 'dollshop:cart_list' %}"
 															><i class="fa fa-shopping-cart"></i> View cart</a
 														>
 													</div>

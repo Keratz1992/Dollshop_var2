@@ -34,4 +34,5 @@ class WishlistAdmin(admin.ModelAdmin):
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
 
-    list_filter = ['user', 'product']
+    list_display = ['user']
+    list_filter = ['user']

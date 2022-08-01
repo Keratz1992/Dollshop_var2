@@ -12,9 +12,17 @@ def homepage(request):
     category = Category.objects.all()
     product = Product.objects.all()
 
+    cart = Cart.objects.filter(user=request.user)
+    total_price = 0
+    for item in cart:
+        total_price += item.product.price * item.quantity
+
     context = {
         'product': product,
         'category': category,
+        'cart': cart,
+        'total_price': total_price,
+        'cart_items': cart.count()
     }
     return render(request, 'dollshop1/shop.html', context)
 
@@ -81,6 +89,21 @@ def wishlist_delete(request, product_pk):
     return redirect('dollshop:wishlist')
 
 
+# def cart_list(request):
+#     cart = Cart.objects.filter(user=request.user).first()
+#     product = cart.product.all()
+#     total_price = 0
+#     for item in product:
+#         total_price += item.price
+#
+#     context = {
+#         'product': product,
+#         'total_price': total_price,
+#
+#     }
+#     return render(request, 'dollshop1/cart.html', context)
+
+
 def cart_list(request):
     cart = Cart.objects.filter(user=request.user)
 
@@ -89,14 +112,16 @@ def cart_list(request):
         total_price += item.product.price * item.quantity
 
     if request.method == 'POST':
-        # cart.quantity = request.POST.get('quantity')
-        # return redirect('dollshop:cart_list')
-        quantity_form = CartQuantityForm(request.POST)
-        if quantity_form.is_valid():
-            qf = quantity_form.save(commit=False)
-            qf.quantity = cart.quantity
-            qf.save()
-            return redirect('dollshop:cart_list')
+        print(request.POST.get('quantity'))
+        cart.quantity = request.POST.get('quantity')
+        cart.update()
+        return redirect('dollshop:cart_list')
+        # quantity_form = CartQuantityForm(request.POST)
+        # if quantity_form.is_valid():
+        #     qf = quantity_form.save(commit=False)
+        #     qf.quantity = cart.quantity
+        #     qf.update()
+        #     return redirect('dollshop:cart_list')
     else:
         quantity_form = CartQuantityForm()
 

@@ -14,9 +14,10 @@ class CommentaryForm(forms.ModelForm):
         })}
 
 
-class CartQuantityForm(forms.ModelForm):
+class CartQuantityForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1, max_value=20)
 
-    class Meta:
-        model = Cart
-        fields = ['quantity']
+    # class Meta:
+    #     model = Cart
+    #     fields = ['quantity']
 

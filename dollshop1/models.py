@@ -21,7 +21,7 @@ class Product(models.Model):
                               verbose_name='Изображение')
     price = models.DecimalField(decimal_places=0, max_digits=9, default=0, verbose_name='Цена')
     date_create = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=255, choices=STATUS, default=STATUS[1], verbose_name='Статус')
+    status = models.CharField(max_length=255, choices=STATUS, default=STATUS[0], verbose_name='Статус')
 
     def __str__(self):
         return f'{self.name}, {self.category}, {self.price}, {self.date_create}'
