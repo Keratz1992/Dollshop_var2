@@ -70,16 +70,22 @@
 											<ul class="dropdown_links">
 												<li><a href="checkout.html">Checkout </a></li>
 												<li><a href="my-account.html">My Account </a></li>
-												<li><a href="cart.html">Shopping Cart</a></li>
+												<li><a href="{% url 'dollshop:cart_list' %}">Shopping Cart</a></li>
 												<li>
 													<a href="{% url 'dollshop:wishlist' %}">Wishlist</a>
 												</li>
 											</ul>
 										</div>
 										<div class="header_account-list header_wishlist">
+											{% if user %}
 											<a href="{% url 'dollshop:wishlist' %}"
-												><i class="icon-heart"></i
-											></a>
+												><i class="icon-heart"></i>
+											</a>
+											{% else %}
+											<a href="#">
+												<i class="icon-heart"></i>
+											</a>
+											{% endif %}
 										</div>
 										<div class="header_account-list mini_cart_wrapper">
 											<a href="javascript:void(0)"
@@ -563,7 +569,7 @@
 											<div class="action_links">
 												<ul>
 													<li class="add_to_cart">
-														<a href="cart.html" title="Add to cart"
+														<a href="{% url 'dollshop:cart_add' product_pk=item.pk %}" title="Add to cart"
 															><i class="icon-shopping-bag"></i
 														></a>
 													</li>
@@ -573,7 +579,7 @@
 														></a>
 													</li>
 													<li class="wishlist">
-														<a href="#" title="Add to Wishlist"
+														<a href="{% url 'dollshop:wishlist_add' item.pk %}" title="Add to Wishlist"
 															><i class="icon-heart"></i
 														></a>
 													</li>
@@ -854,7 +860,7 @@
 									<ul>
 										<li><a href="my-account.html">My Account</a></li>
 										<li><a href="contact.html">Contact</a></li>
-										<li><a href="cart.html">Shopping cart</a></li>
+										<li><a href="{% url 'dollshop:cart_list' %}">Shopping cart</a></li>
 										<li><a href="checkout.html">Checkout</a></li>
 										<li><a href="shop.html">Shop</a></li>
 										<li><a href="#">Order History</a></li>

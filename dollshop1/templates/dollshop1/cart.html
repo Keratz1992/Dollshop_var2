@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Lukani - wishlist page</title>
+    <title>Lukani - cart page</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -40,6 +40,7 @@
 </head>
 
 <body>
+
 
     <!--header area start-->
 
@@ -500,7 +501,7 @@
                             <div class="main_menu menu_position">
                                 <nav>
                                     <ul>
-                                        <li><a href="{% url 'dollshop:homepage' %}">home<i class="fa fa-angle-down"></i></a>
+                                        <li><a href="index.html">home<i class="fa fa-angle-down"></i></a>
                                             <ul class="sub_menu">
                                                 <li><a href="index.html">Home shop 1</a></li>
                                                 <li><a href="index-2.html">Home shop 2</a></li>
@@ -588,10 +589,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="breadcrumb_content">
-                        <h3>Wishlist</h3>
+                        <h3>Cart</h3>
                         <ul>
-                            <li><a href="{% url 'dollshop:homepage' %}">Главная</a></li>
-                            <li>Wishlist</li>
+                            <li><a href="index.html">home</a></li>
+                            <li>Shopping Cart</li>
                         </ul>
                     </div>
                 </div>
@@ -600,14 +601,13 @@
     </div>
     <!--breadcrumbs area end-->
 
-
-    <!--wishlist area start -->
-    <div class="wishlist_area mt-100">
+    <!--shopping cart area start -->
+    <div class="shopping_cart_area mt-100">
         <div class="container">
-            <form action="#">
+            <form action="#" method="POST"> {% csrf_token %}
                 <div class="row">
                     <div class="col-12">
-                        <div class="table_desc wishlist">
+                        <div class="table_desc">
                             <div class="cart_page table-responsive">
                                 <table>
                                     <thead>
@@ -616,37 +616,72 @@
                                             <th class="product_thumb">Image</th>
                                             <th class="product_name">Product</th>
                                             <th class="product-price">Price</th>
-                                            <th class="product_quantity">Stock Status</th>
-                                            <th class="product_total">Add To Cart</th>
+                                            <th class="product_quantity">Quantity</th>
+                                            <th class="product_total">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for obj in list_obj %}
-                                        <tr>
-                                            <td class="product_remove"><a href="{% url 'dollshop:wishlist_delete' product_pk=obj.pk %}">X</a></td>
-                                            <td class="product_thumb"><a href="{% url 'dollshop:product_detail' get_pk=obj.pk %}"><img
-                                                        src="{{ obj.product.image.url }}" alt=""></a></td>
-                                            <td class="product_name"><a href="#">{{ obj.product.name }}</a></td>
-                                            <td class="product-price">{{ obj.product.price }}</td>
-                                            <td class="product_quantity">{{ obj.product.status }}</td>
-                                            <td class="product_total"><a href="#">Add To Cart</a></td>
+                                        {% for item in cart %}
+                                            <tr>
+                                                <td class="product_remove"><a href="{% url 'dollshop:cart_delete' product_pk=item.pk %}"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                                <td class="product_thumb"><a href="#"><img
+                                                            src="{{ item.product.image.url }}" alt=""></a></td>
+                                                <td class="product_name"><a href="#">{{ item.product.name }}</a></td>
+                                                <td class="product-price">{{ item.product.price }}</td>
+                                                <td class="product_quantity"><label>Quantity</label>
+                                                    {{ quantity_form.quantity }}
+                                                        <button type="submit"> Обновить</button>
 
-                                        </tr>
+<!--                                                    <input name="quantity" min="1" max="100" value="{{ item.quantity }}" type="number">-->
+
+                                                </td>
+                                                <td class="product_total">{{ item.get_quantity_sum }}</td>
+
+<!--                                                    {% csrf_token %}-->
+<!--                                                    {{ quantity_form.as_p }}-->
+<!--                                                    <button type="submit">Отправить</button>-->
+
+                                            </tr>
+
                                         {% endfor %}
-
-
                                     </tbody>
                                 </table>
                             </div>
-
+                            <div class="cart_submit">
+                                <button type="submit">update cart</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!--coupon code area start-->
+                <div class="coupon_area">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="coupon_code right">
+                                <h3>Cart Totals</h3>
+                                <div class="coupon_inner">
+                                    <div class="cart_subtotal">
+                                        <p>Total : {{ total_price }}</p>
+                                        <p class="cart_amount"></p>
+                                    </div>
+                                    <div class="checkout_btn">
+                                        <a href="#">Proceed to Checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--coupon code area end-->
             </form>
         </div>
     </div>
-    <!--wishlist area end -->
+    <!--shopping cart area end -->
 
+    <!--brand area start-->
+
+    <!--brand area end-->
 
     <!--footer area start-->
     <footer class="footer_widgets">
@@ -760,7 +795,6 @@
         </div>
     </footer>
     <!--footer area end-->
-
 
     <!-- JS
 ============================================ -->

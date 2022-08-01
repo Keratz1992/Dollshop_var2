@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 
-from dollshop1.models import Category, Product, Commentary
-from dollshop1.forms import CommentaryForm
+from dollshop1.models import Category, Product, Commentary, Wishlist, Cart
+from dollshop1.forms import CommentaryForm, CartQuantityForm
+
 
 
 def homepage(request):
@@ -33,6 +36,7 @@ def product_detail(request, get_pk):
     product = Product.objects.get(pk=get_pk)
     comment = Commentary.objects.filter(product=get_pk)
 
+
     if request.method == 'POST':
         comment_form = CommentaryForm(request.POST)
         if comment_form.is_valid():
@@ -48,9 +52,79 @@ def product_detail(request, get_pk):
         'product': product,
         'comment': comment,
         'comment_form': comment_form,
+        'count': comment.count(),
     }
     return render(request, 'dollshop1/product_detail.html', context)
 
 
 def wishlist(request):
-    return render(request, 'dollshop1/wishlist.html')
+    list_object = Wishlist.objects.filter(user=request.user)
+    context = {
+        'list_obj': list_object
+    }
+    return render(request, 'dollshop1/wishlist.html', context)
+
+
+def wishlist_add(request, product_pk):
+    product = Product.objects.get(pk=product_pk)
+    wishlist_obj = Wishlist.objects.filter(user=request.user, product=product)
+    if not wishlist_obj:
+        Wishlist.objects.create(user=request.user, product=product)
+        return redirect('dollshop:homepage')
+    else:
+        return redirect('dollshop:homepage')
+
+
+def wishlist_delete(request, product_pk):
+    product = Wishlist.objects.get(pk=product_pk).delete()
+    # product = get_object_or_404(Wishlist, pk=product_pk)
+    return redirect('dollshop:wishlist')
+
+
+def cart_list(request):
+    cart = Cart.objects.filter(user=request.user)
+
+    total_price = 0
+    for item in cart:
+        total_price += item.product.price * item.quantity
+
+    if request.method == 'POST':
+        # cart.quantity = request.POST.get('quantity')
+        # return redirect('dollshop:cart_list')
+        quantity_form = CartQuantityForm(request.POST)
+        if quantity_form.is_valid():
+            qf = quantity_form.save(commit=False)
+            qf.quantity = cart.quantity
+            qf.save()
+            return redirect('dollshop:cart_list')
+    else:
+        quantity_form = CartQuantityForm()
+
+
+    context = {
+        'cart': cart,
+        'total_price': total_price,
+        'quantity_form': quantity_form,
+
+    }
+
+    return render(request, 'dollshop1/cart.html', context)
+
+
+def cart_delete(request, product_pk):
+    cart = Cart.objects.get(pk=product_pk)
+    cart.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def cart_add(request, product_pk):
+    product = Product.objects.get(pk=product_pk)
+    cart = Cart.objects.filter(user=request.user, product=product)
+    if not cart.exists():
+        Cart.objects.create(user=request.user, product=product, quantity=1)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        cart_item = cart.first()
+        cart_item.quantity += 1
+        cart_item.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

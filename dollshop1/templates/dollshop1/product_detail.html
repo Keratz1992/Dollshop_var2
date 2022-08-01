@@ -692,6 +692,9 @@
                             <div class="product_meta">
                                 <span>Category: <a href="#">{{ product.category }}</a></span>
                             </div>
+                            <div class="product_meta">
+                                <span>Статус: <a href="#">{{ product.status }}</a></span>
+                            </div>
 
                         </form>
 
@@ -729,7 +732,7 @@
                                 </li>
                                 <li>
                                     <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
-                                        aria-selected="false">Комментарии</a>
+                                        aria-selected="false">Комментарии ({{ count }})</a>
                                 </li>
                             </ul>
                         </div>

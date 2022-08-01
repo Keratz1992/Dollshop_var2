@@ -1,6 +1,6 @@
 from django import forms
 
-from dollshop1.models import Commentary
+from dollshop1.models import Commentary, Cart
 
 
 class CommentaryForm(forms.ModelForm):
@@ -12,3 +12,11 @@ class CommentaryForm(forms.ModelForm):
             'name': 'comment',
             'id': 'review_comment',
         })}
+
+
+class CartQuantityForm(forms.ModelForm):
+
+    class Meta:
+        model = Cart
+        fields = ['quantity']
+
